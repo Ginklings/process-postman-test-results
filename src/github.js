@@ -4,6 +4,19 @@ const markupPrefix = '<!-- im-open/process-postman-test-results -->';
 
 async function createStatusCheck(repoToken, markupData, conclusion, reportName) {
   try {
+    if (github.context.eventName === 'workflow_run') {
+      core.info('Action was triggered by workflow_run: using SHA and RUN_ID from triggering workflow');
+      const event = github.context.payload;
+      if (!event.workflow_run) {
+        throw new Error("Event of type 'workflow_run' is missing 'workflow_run' field");
+      }
+      var _runId = event.workflow_run.id;
+    } else {
+      var _runId = github.context.runId;
+    }
+
+    const runId = _runId;
+
     core.info(`Creating Status check for ${reportName}...`);
     const octokit = github.getOctokit(repoToken);
 
@@ -17,7 +30,8 @@ async function createStatusCheck(repoToken, markupData, conclusion, reportName) 
     const response = await octokit.rest.checks.create({
       owner: github.context.repo.owner,
       repo: github.context.repo.repo,
-      name: `status check - ${reportName.toLowerCase()}`,
+      external_id: runId.toString(),
+      name: `${reportName.toLowerCase()}`,
       head_sha: git_sha,
       status: 'completed',
       conclusion: conclusion,
@@ -27,6 +41,8 @@ async function createStatusCheck(repoToken, markupData, conclusion, reportName) 
         text: markupData
       }
     });
+
+    core.info(JSON.stringify(response));
 
     if (response.status !== 201) {
       throw new Error(`Failed to create status check. Error code: ${response.status}`);

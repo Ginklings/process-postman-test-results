@@ -1,4 +1,6 @@
 const core = require('@actions/core');
+const fg = require('fast-glob');
+const fs = require('fs');
 const { readJsonResultsFromFile } = require('./utils');
 const { createStatusCheck, createPrComment } = require('./github');
 const { getMarkupForJson } = require('./markup');
@@ -9,14 +11,35 @@ const requiredArgOptions = {
 };
 
 const token = core.getInput('github-token', requiredArgOptions);
-const resultsFile = core.getInput('results-file', requiredArgOptions);
+const resultsFileList = core.getInput('results-file', requiredArgOptions);
 const ignoreTestFailures = core.getInput('ignore-test-failures') == 'true';
 const shouldCreateStatusCheck = core.getInput('create-status-check') == 'true';
 const shouldCreatePRComment = core.getInput('create-pr-comment') == 'true';
 const updateCommentIfOneExists = core.getInput('update-comment-if-one-exists') == 'true';
-const reportName = core.getInput('report-name');
+const patternReportName = core.getInput('report-name');
 
 async function run() {
+  resultsFiles = resultsFileList.split(',');
+  var i = 0;
+  if (resultsFiles.length > 1 || !fs.existsSync(resultsFileList)) {
+    for (const filePath of resultsFiles) {
+      if (fs.existsSync(filePath)) {
+        i += 1;
+        await process_file(filePath, i, true);
+      } else {
+        unpackedFiles = fg.sync(filePath, { dot: true });
+        for (const unpackedFile of unpackedFiles) {
+          i += 1;
+          await process_file(unpackedFile, i, true);
+        }
+      }
+    }
+  } else {
+    await process_file(resultsFileList, i, false);
+  }
+}
+
+async function process_file(resultsFile, reportIndex, multiFileMode) {
   try {
     const resultsJson = await readJsonResultsFromFile(resultsFile);
     if (!resultsJson) {
@@ -24,6 +47,17 @@ async function run() {
       return;
     }
 
+    if (multiFileMode) {
+      if (patternReportName == 'filename') {
+        var _reportName = resultsFile.replace(/\//g, '_');
+      } else {
+        var _reportName = patternReportName + ' ' + reportIndex;
+      }
+    } else {
+      var _reportName = patternReportName;
+    }
+
+    const reportName = _reportName;
     const markupData = getMarkupForJson(resultsJson, reportName);
 
     let conclusion = 'success';
