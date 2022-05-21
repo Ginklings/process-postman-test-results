@@ -30,25 +30,7 @@ async function createStatusCheck(repoToken, markupData, conclusion, reportName) 
     const response = await octokit.rest.checks.create({
       owner: github.context.repo.owner,
       repo: github.context.repo.repo,
-      name: `status check - ${reportName.toLowerCase()} - ${runId}`,
-      head_sha: git_sha,
-      status: 'completed',
-      conclusion: conclusion,
-      output: {
-        title: reportName,
-        summary: `This test run completed at \`${checkTime}\``,
-        text: markupData
-      }
-    });
-
-    core.info(`Updating information for current check run...`);
-
-    const resp = await octokit.rest.checks.update({
-      owner: github.context.repo.owner,
-      repo: github.context.repo.repo,
-      check_run_id: response.data.id,
-      external_id: runId.toString(),
-      name: `status check - ${reportName.toLowerCase()} - ${runId}`,
+      name: `${reportName.toLowerCase()}_${runId}`,
       head_sha: git_sha,
       status: 'completed',
       conclusion: conclusion,
@@ -62,8 +44,6 @@ async function createStatusCheck(repoToken, markupData, conclusion, reportName) 
     core.info(`Check run create response: ${resp.status}`);
     core.info(`Check run URL: ${resp.data.url}`);
     core.info(`Check run HTML: ${resp.data.html_url}`);
-
-    core.setOutput(`runHtmlUrl`, `${resp.data.html_url}`);
 
     if (response.status !== 201) {
       throw new Error(`Failed to create status check. Error code: ${response.status}`);
