@@ -19,6 +19,7 @@ const updateCommentIfOneExists = core.getInput('update-comment-if-one-exists') =
 const patternReportName = core.getInput('report-name');
 
 async function run() {
+  core.startGroup(`Logs - creating report...`);
   resultsFiles = resultsFileList.split(',');
   var i = 0;
   if (resultsFiles.length > 1 || !fs.existsSync(resultsFileList)) {
@@ -37,6 +38,7 @@ async function run() {
   } else {
     await process_file(resultsFileList, i, false);
   }
+  core.endGroup();
 }
 
 async function process_file(resultsFile, reportIndex, multiFileMode) {
