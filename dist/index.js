@@ -20868,9 +20868,9 @@ var require_github2 = __commonJS({
             text: markupData
           }
         });
-        core2.info(`Check run create response: ${resp.status}`);
-        core2.info(`Check run URL: ${resp.data.url}`);
-        core2.info(`Check run HTML: ${resp.data.html_url}`);
+        core2.info(`Check run create response: ${response.status}`);
+        core2.info(`Check run URL: ${response.data.url}`);
+        core2.info(`Check run HTML: ${response.data.html_url}`);
         if (response.status !== 201) {
           throw new Error(`Failed to create status check. Error code: ${response.status}`);
         } else {
