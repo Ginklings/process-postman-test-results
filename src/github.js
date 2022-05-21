@@ -31,7 +31,7 @@ async function createStatusCheck(repoToken, markupData, conclusion, reportName) 
       owner: github.context.repo.owner,
       repo: github.context.repo.repo,
       external_id: runId.toString(),
-      name: `${reportName.toLowerCase()}`,
+      name: `status check - ${reportName.toLowerCase()}`,
       head_sha: git_sha,
       status: 'completed',
       conclusion: conclusion,
