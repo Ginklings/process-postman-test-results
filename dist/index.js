@@ -20838,10 +20838,10 @@ var require_github2 = __commonJS({
     async function createStatusCheck2(repoToken, markupData, conclusion, reportName) {
       try {
         if (github.context.eventName === 'workflow_run') {
-          core2.info('Action was triggered by workflow_run: using SHA and RUN_ID from triggering workflow');
+          core2.info('Triggered by workflow_run: using SHA and RUN_ID from triggering workflow');
           const event = github.context.payload;
           if (!event.workflow_run) {
-            throw new Error("Event of type 'workflow_run' is missing 'workflow_run' field");
+            throw new Error("Missing 'workflow_run'.");
           }
           var _runId = event.workflow_run.id;
         } else {
@@ -20858,7 +20858,6 @@ var require_github2 = __commonJS({
         const response = await octokit.rest.checks.create({
           owner: github.context.repo.owner,
           repo: github.context.repo.repo,
-          external_id: runId.toString(),
           name: `status check - ${reportName.toLowerCase()}`,
           head_sha: git_sha,
           status: 'completed',
@@ -20868,6 +20867,11 @@ var require_github2 = __commonJS({
             summary: `This test run completed at \`${checkTime}\``,
             text: markupData
           }
+        });
+        core2.info(`Updating information for current check run...`);
+        const resp = await octokit.rest.checks.update({
+          check_run_id: response.data.id,
+          external_id: runId.toString()
         });
         if (response.status !== 201) {
           throw new Error(`Failed to create status check. Error code: ${response.status}`);
