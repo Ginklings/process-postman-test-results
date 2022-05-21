@@ -20869,7 +20869,6 @@ var require_github2 = __commonJS({
             text: markupData
           }
         });
-        core2.info(JSON.stringify(response));
         if (response.status !== 201) {
           throw new Error(`Failed to create status check. Error code: ${response.status}`);
         } else {

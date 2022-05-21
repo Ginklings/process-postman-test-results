@@ -42,8 +42,6 @@ async function createStatusCheck(repoToken, markupData, conclusion, reportName) 
       }
     });
 
-    core.info(JSON.stringify(response));
-
     if (response.status !== 201) {
       throw new Error(`Failed to create status check. Error code: ${response.status}`);
     } else {
