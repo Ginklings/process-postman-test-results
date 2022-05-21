@@ -20837,17 +20837,7 @@ var require_github2 = __commonJS({
     var markupPrefix = '<!-- im-open/process-postman-test-results -->';
     async function createStatusCheck2(repoToken, markupData, conclusion, reportName) {
       try {
-        if (github.context.eventName === 'workflow_run') {
-          core2.info('Triggered by workflow_run: using SHA and RUN_ID from triggering workflow');
-          const event = github.context.payload;
-          if (!event.workflow_run) {
-            throw new Error("Missing 'workflow_run'.");
-          }
-          var _runId = event.workflow_run.id;
-        } else {
-          var _runId = github.context.runId;
-        }
-        const runId = _runId;
+        const runId = github.context.runId;
         core2.info(`Creating Status check for ${reportName}...`);
         const octokit = github.getOctokit(repoToken);
         let git_sha =

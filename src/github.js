@@ -4,18 +4,18 @@ const markupPrefix = '<!-- im-open/process-postman-test-results -->';
 
 async function createStatusCheck(repoToken, markupData, conclusion, reportName) {
   try {
-    if (github.context.eventName === 'workflow_run') {
-      core.info('Triggered by workflow_run: using SHA and RUN_ID from triggering workflow');
-      const event = github.context.payload;
-      if (!event.workflow_run) {
-        throw new Error("Missing 'workflow_run'.");
-      }
-      var _runId = event.workflow_run.id;
-    } else {
-      var _runId = github.context.runId;
-    }
+    // if (github.context.eventName === 'workflow_run') {
+    //   core.info('Triggered by workflow_run: using SHA and RUN_ID from triggering workflow');
+    //   const event = github.context.payload;
+    //   if (!event.workflow_run) {
+    //     throw new Error("Missing 'workflow_run'.");
+    //   }
+    //   var _runId = event.workflow_run.id;
+    // } else {
+    //   var _runId = github.context.runId;
+    // }
 
-    const runId = _runId;
+    const runId = github.context.runId;
 
     core.info(`Creating Status check for ${reportName}...`);
     const octokit = github.getOctokit(repoToken);
