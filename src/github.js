@@ -43,7 +43,11 @@ async function createStatusCheck(repoToken, markupData, conclusion, reportName) 
 
     core.info(`Check run create response: ${response.status}`);
     core.info(`Check run URL: ${response.data.url}`);
+    core.endGroup();
+    core.startGroup(`Link to report:`);
     core.info(`Check run HTML: ${response.data.html_url}`);
+    core.endGroup();
+    core.startGroup(`Logs - exiting current file...`);
 
     if (response.status !== 201) {
       throw new Error(`Failed to create status check. Error code: ${response.status}`);

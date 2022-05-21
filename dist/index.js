@@ -20870,7 +20870,11 @@ var require_github2 = __commonJS({
         });
         core2.info(`Check run create response: ${response.status}`);
         core2.info(`Check run URL: ${response.data.url}`);
+        core2.endGroup();
+        core2.startGroup(`Link to report:`);
         core2.info(`Check run HTML: ${response.data.html_url}`);
+        core2.endGroup();
+        core2.startGroup(`Logs - exiting current file...`);
         if (response.status !== 201) {
           throw new Error(`Failed to create status check. Error code: ${response.status}`);
         } else {
@@ -24337,6 +24341,7 @@ var shouldCreatePRComment = core.getInput('create-pr-comment') == 'true';
 var updateCommentIfOneExists = core.getInput('update-comment-if-one-exists') == 'true';
 var patternReportName = core.getInput('report-name');
 async function run() {
+  core.startGroup(`Logs - creating report...`);
   resultsFiles = resultsFileList.split(',');
   var i = 0;
   if (resultsFiles.length > 1 || !fs.existsSync(resultsFileList)) {
@@ -24355,6 +24360,7 @@ async function run() {
   } else {
     await process_file(resultsFileList, i, false);
   }
+  core.endGroup();
 }
 async function process_file(resultsFile, reportIndex, multiFileMode) {
   try {
