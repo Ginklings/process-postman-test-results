@@ -71,10 +71,14 @@
 </details>
 
   
-#### BÁSICO
+#### INSUMO / BÁSICO / 
 <details>
-  <summary>:x: Deve retornar 404</summary>    
+  <summary>:x: LISTAR (DELETADO)</summary>    
   <table>
+    <tr>
+      <th>Test Name:</th>
+      <td><code>Deve retornar 404</code></td>
+    </tr>
     <tr>
       <th>Error Type:</th>
       <td><code>AssertionError</code></td>
