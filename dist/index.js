@@ -24264,26 +24264,26 @@ ${getTestResultsMarkup(jsonResults.failures, reportName, jsonResults.collection.
         return getNoResultsMarkup(reportName);
       } else {
         itemList.forEach(item => {
-          resultsMarkup += getItemsFailuresMarkup(item, failures);
+          resultsMarkup += getItemsFailuresMarkup(item, failures, '');
         });
         return resultsMarkup.trim();
       }
     }
-    function getItemsFailuresMarkup(item, failures) {
+    function getItemsFailuresMarkup(item, failures, prefix) {
       var resultsMarkup = '';
-      var fullName = item.name;
+      var fullName = prefix + item.name + ' / ';
       var failuresForItem = failures.filter(el => el.parent.id == item.id);
       if (typeof failuresForItem !== 'undefined' && failuresForItem.length > 0) {
         resultsMarkup += `
-    #### ${fullName}
-    `;
+#### ${fullName}${failuresForItem[0].source.name}
+`;
         failuresForItem.forEach(failure => {
           resultsMarkup += getFailureMarkup(failure);
         });
       }
       if (typeof item.item !== 'undefined' && item.item.length > 0) {
         item.item.forEach(subItem => {
-          resultsMarkup += getItemsFailuresMarkup(subItem, failures);
+          resultsMarkup += getItemsFailuresMarkup(subItem, failures, fullName);
         });
       }
       return resultsMarkup;
