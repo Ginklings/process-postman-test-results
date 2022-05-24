@@ -137,6 +137,7 @@ function getItemsFailuresMarkup(item, failures, prefix) {
 
   if (typeof failuresForItem !== 'undefined' && failuresForItem.length > 0) {
     resultsMarkup += `
+
 #### ${fullName}${failuresForItem[0].source.name}
 `;
     failuresForItem.forEach(failure => {
