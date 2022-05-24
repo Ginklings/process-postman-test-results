@@ -72,7 +72,7 @@
 
   
 #### BÁSICO
-    <details>
+<details>
   <summary>:x: Deve retornar 404</summary>    
   <table>
     <tr>
