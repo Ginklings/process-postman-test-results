@@ -10,7 +10,7 @@ ${getBadge(jsonResults.stats.requests, 'Requests')}
 ${getBadge(jsonResults.stats.assertions, 'Assertions')}
 ${getTestTimes(jsonResults.timings)}
 ${getTestCounters(jsonResults)}
-${getTestResultsMarkup(jsonResults.failures, reportName)}
+${getTestResultsMarkup(jsonResults.failures, reportName, jsonResults.item)}
   `;
 }
 
@@ -117,17 +117,35 @@ function getTestCounters(run) {
   `;
 }
 
-function getTestResultsMarkup(failures, reportName) {
+function getTestResultsMarkup(failures, reportName, itemList) {
   let resultsMarkup = '';
 
   if (!failures || failures.length === 0) {
     return getNoResultsMarkup(reportName);
   } else {
-    failures.forEach(failure => {
-      resultsMarkup += getFailureMarkup(failure);
+    itemList.forEach(item => {
+      resultsMarkup += getItemsFailuresMarkup(item, failures);
     });
     return resultsMarkup.trim();
   }
+}
+
+function getItemsFailuresMarkup(item, failures) {
+  var resultsMarkup = '';
+  var fullName = item.name;
+  var failuresForItem = failures.filter(el => el.parent.id == item.id);
+  if (typeof failuresForItem !== 'undefined' && failuresForItem.length > 0) {
+    resultsMarkup += `
+    #### ${fullName}
+    `;
+    failuresForItem.forEach(failure => {
+      resultsMarkup += getFailureMarkup(failure);
+    });
+  }
+  item.item.forEach(subItem => {
+    resultsMarkup += getItemsFailuresMarkup(subItem, failures);
+  });
+  return resultsMarkup;
 }
 
 function getNoResultsMarkup(reportName) {
