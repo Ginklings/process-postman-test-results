@@ -5549,6 +5549,7 @@ var require_utils6 = __commonJS({
         } else {
           return {
             stats: parsedJson.run.stats,
+            collection: parsedJson.collection,
             timings: parsedJson.run.timings,
             failures: parsedJson.run.failures,
             hasFailures: parsedJson.run.failures.length > 0,
@@ -24158,7 +24159,7 @@ ${getBadge(jsonResults.stats.requests, 'Requests')}
 ${getBadge(jsonResults.stats.assertions, 'Assertions')}
 ${getTestTimes(jsonResults.timings)}
 ${getTestCounters(jsonResults)}
-${getTestResultsMarkup(jsonResults.failures, reportName, jsonResults.item)}
+${getTestResultsMarkup(jsonResults.failures, reportName, jsonResults.collection.item)}
   `;
     }
     function getBadge(stats, name) {
@@ -24280,9 +24281,11 @@ ${getTestResultsMarkup(jsonResults.failures, reportName, jsonResults.item)}
           resultsMarkup += getFailureMarkup(failure);
         });
       }
-      item.item.forEach(subItem => {
-        resultsMarkup += getItemsFailuresMarkup(subItem, failures);
-      });
+      if (typeof item.item !== 'undefined' && item.item.length > 0) {
+        item.item.forEach(subItem => {
+          resultsMarkup += getItemsFailuresMarkup(subItem, failures);
+        });
+      }
       return resultsMarkup;
     }
     function getNoResultsMarkup(reportName) {

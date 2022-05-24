@@ -10,7 +10,7 @@ ${getBadge(jsonResults.stats.requests, 'Requests')}
 ${getBadge(jsonResults.stats.assertions, 'Assertions')}
 ${getTestTimes(jsonResults.timings)}
 ${getTestCounters(jsonResults)}
-${getTestResultsMarkup(jsonResults.failures, reportName, jsonResults.item)}
+${getTestResultsMarkup(jsonResults.failures, reportName, jsonResults.collection.item)}
   `;
 }
 
@@ -142,9 +142,11 @@ function getItemsFailuresMarkup(item, failures) {
       resultsMarkup += getFailureMarkup(failure);
     });
   }
-  item.item.forEach(subItem => {
-    resultsMarkup += getItemsFailuresMarkup(subItem, failures);
-  });
+  if (typeof item.item !== 'undefined' && item.item.length > 0) {
+    item.item.forEach(subItem => {
+      resultsMarkup += getItemsFailuresMarkup(subItem, failures);
+    });
+  }
   return resultsMarkup;
 }
 

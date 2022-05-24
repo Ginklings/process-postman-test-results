@@ -20,6 +20,7 @@ async function readJsonResultsFromFile(resultsFile) {
     } else {
       return {
         stats: parsedJson.run.stats,
+        collection: parsedJson.collection,
         timings: parsedJson.run.timings,
         failures: parsedJson.run.failures,
         hasFailures: parsedJson.run.failures.length > 0,
