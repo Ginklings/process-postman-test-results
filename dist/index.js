@@ -24275,6 +24275,7 @@ ${getTestResultsMarkup(jsonResults.failures, reportName, jsonResults.collection.
       var failuresForItem = failures.filter(el => el.parent.id == item.id);
       if (typeof failuresForItem !== 'undefined' && failuresForItem.length > 0) {
         resultsMarkup += `
+
 #### ${fullName}${failuresForItem[0].source.name}
 `;
         failuresForItem.forEach(failure => {
