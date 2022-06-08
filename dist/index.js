@@ -24360,6 +24360,7 @@ async function run() {
   if (resultsFiles.length > 1 || !fs.existsSync(resultsFileList)) {
     for (const fileName of resultsFiles) {
       var filePath = path.join(workingDir, fileName);
+      core.info(filePath);
       if (fs.existsSync(filePath)) {
         i += 1;
         await process_file(filePath, i, true);
@@ -24367,6 +24368,7 @@ async function run() {
         unpackedFiles = fg.sync(filePath, { dot: true });
         for (const unpackedFile of unpackedFiles) {
           i += 1;
+          core.info(unpackedFile);
           await process_file(unpackedFile, i, true);
         }
       }
