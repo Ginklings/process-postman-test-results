@@ -1,6 +1,7 @@
 const core = require('@actions/core');
 const fg = require('fast-glob');
 const fs = require('fs');
+const path = require('path');
 const { readJsonResultsFromFile } = require('./utils');
 const { createStatusCheck, createPrComment } = require('./github');
 const { getMarkupForJson } = require('./markup');
@@ -17,13 +18,15 @@ const shouldCreateStatusCheck = core.getInput('create-status-check') == 'true';
 const shouldCreatePRComment = core.getInput('create-pr-comment') == 'true';
 const updateCommentIfOneExists = core.getInput('update-comment-if-one-exists') == 'true';
 const patternReportName = core.getInput('report-name');
+const workingDir = core.getInput('working-dir');
 
 async function run() {
   core.startGroup(`Logs - creating report...`);
   resultsFiles = resultsFileList.split(',');
   var i = 0;
   if (resultsFiles.length > 1 || !fs.existsSync(resultsFileList)) {
-    for (const filePath of resultsFiles) {
+    for (const fileName of resultsFiles) {
+      var filePath = path.join(workingDir, fileName);
       if (fs.existsSync(filePath)) {
         i += 1;
         await process_file(filePath, i, true);
@@ -36,7 +39,7 @@ async function run() {
       }
     }
   } else {
-    await process_file(resultsFileList, i, false);
+    await process_file(path.join(workingDir, resultsFileList), i, false);
   }
   core.endGroup();
 }
