@@ -39,7 +39,7 @@ async function run() {
       }
     }
   } else {
-    await process_file(path.join(workingDir, resultsFileList), i, false);
+    await process_file(path.join(resultsFileList), i, false);
   }
   core.endGroup();
 }
@@ -54,7 +54,7 @@ async function process_file(resultsFile, reportIndex, multiFileMode) {
 
     if (multiFileMode) {
       if (patternReportName == 'filename') {
-        var _reportName = resultsFile.replace(/\//g, '_');
+        var _reportName = path.basename(resultsFile).replace(/\//g, '_');
       } else {
         var _reportName = patternReportName + ' ' + reportIndex;
       }

@@ -24360,7 +24360,6 @@ async function run() {
   if (resultsFiles.length > 1 || !fs.existsSync(resultsFileList)) {
     for (const fileName of resultsFiles) {
       var filePath = path.join(workingDir, fileName);
-      core.info(filePath);
       if (fs.existsSync(filePath)) {
         i += 1;
         await process_file(filePath, i, true);
@@ -24368,13 +24367,12 @@ async function run() {
         unpackedFiles = fg.sync(filePath, { dot: true });
         for (const unpackedFile of unpackedFiles) {
           i += 1;
-          core.info(unpackedFile);
           await process_file(unpackedFile, i, true);
         }
       }
     }
   } else {
-    await process_file(path.join(workingDir, resultsFileList), i, false);
+    await process_file(path.join(resultsFileList), i, false);
   }
   core.endGroup();
 }
@@ -24387,7 +24385,7 @@ async function process_file(resultsFile, reportIndex, multiFileMode) {
     }
     if (multiFileMode) {
       if (patternReportName == 'filename') {
-        var _reportName = resultsFile.replace(/\//g, '_');
+        var _reportName = path.basename(resultsFile).replace(/\//g, '_');
       } else {
         var _reportName = patternReportName + ' ' + reportIndex;
       }
