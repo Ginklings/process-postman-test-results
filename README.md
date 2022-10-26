@@ -130,7 +130,7 @@ jobs:
         working-directory: ${{ env.PACKAGE_JSON_DIR }}
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
 
       - name: Restore npm packages
         run: npm install
@@ -141,7 +141,7 @@ jobs:
 
       - name: Create Status check based on postman results
         id: process-postman
-        uses: im-open/process-postman-test-results@v2.0.7
+        uses: im-open/process-postman-test-results@v2.1.0
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           results-file: ${{env.PACKAGE_JSON_DIR }}/${{ env.POSTMAN_RESULTS_NAME }}
